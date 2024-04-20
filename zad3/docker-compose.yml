@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: secretpassword
+      POSTGRES_DB: sampledb
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Plik SQL do inicjalizacji bazy danych
+
+  app:
+    build: ./app  # Zmieniono na ścieżkę katalogu zawierającego Dockerfile aplikacji
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
